@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>天才交易员 · 原油模拟操盘</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛢️</text></svg>">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="app">
+
+  <!-- ======================= 顶部标题栏 ======================= -->
+  <header class="topbar">
+    <button class="loan-btn" id="btnLoan" type="button">
+      <span class="loan-badge">贷</span>
+      <span class="loan-text">
+        <b>低利贷</b>
+        <em>每日利息仅1%</em>
+      </span>
+    </button>
+
+    <h1 class="brand-title">成为下一个天才交易员吧！</h1>
+
+    <div class="top-actions">
+      <button class="news-btn" id="btnNews" type="button">
+        <span class="news-ico">◉</span>新闻
+        <span class="news-dot" id="newsDot" hidden></span>
+      </button>
+      <button class="next-btn" id="btnNextDay" type="button">
+        <span class="next-ico">▶</span>下一天
+      </button>
+    </div>
+  </header>
+
+  <!-- ======================= 主工作区 ======================= -->
+  <main class="workbench">
+
+    <!-- 图表区 -->
+    <section class="chart-zone" id="chartZone">
+      <div class="chart-hud">
+        <div class="hud-date-group">
+          <div class="hud-date" id="chartDate">2025年1月1日</div>
+          <div class="loan-toast-wrap" id="loanToastWrap"></div>
+        </div>
+        <div class="hud-price-wrap">
+          <span class="hud-name">WTI原油</span>
+          <span class="hud-price" id="chartPrice">--</span>
+          <span class="hud-unit">美元/桶</span>
+          <span class="hud-change" id="chartChange">--</span>
+        </div>
+      </div>
+      <div class="chart-canvas-box">
+        <canvas id="chart" ></canvas>
+        <div class="chart-legend">
+          <span>开 <b id="lblOpen">--</b></span>
+          <span>高 <b id="lblHigh" class="up-c">--</b></span>
+          <span>低 <b id="lblLow" class="down-c">--</b></span>
+          <span>收 <b id="lblClose">--</b></span>
+        </div>
+      </div>
+      <!-- 右下现金浮层 -->
+      <div class="cash-card">
+        <div class="cash-row">
+          <span class="cash-label">存款余额</span>
+          <span class="cash-value" id="cashAmt">¥200,000.00</span>
+        </div>
+      </div>
+      <div class="chart-tip">点击“下一天”推进行情 · 全部按当日收盘价结算</div>
+    </section>
+
+    <!-- 右侧持仓面板 -->
+    <aside class="side-panel">
+      <div class="panel-title">我的持仓</div>
+
+      <!-- 多单 -->
+      <div class="pos-card pos-long" id="posLongCard">
+        <div class="pos-head">
+          <span class="pos-tag long-tag">买多 · 多单</span>
+          <button class="mini-btn" id="btnSellLongMini" type="button">卖多</button>
+        </div>
+        <div class="pos-body">
+          <div class="pos-amt" id="longAmt">¥0.00</div>
+          <div class="pos-lev" id="longLev">-- 倍杠杆</div>
+          <div class="pos-pnl" id="longPnl">浮盈亏 --</div>
+          <div class="pos-sub" id="longSub">保证金 ¥0.00 · 入场参考 --</div>
+        </div>
+      </div>
+
+      <!-- 空单 -->
+      <div class="pos-card pos-short" id="posShortCard">
+        <div class="pos-head">
+          <span class="pos-tag short-tag">买空 · 空单</span>
+          <button class="mini-btn" id="btnSellShortMini" type="button">卖空</button>
+        </div>
+        <div class="pos-body">
+          <div class="pos-amt" id="shortAmt">¥0.00</div>
+          <div class="pos-lev" id="shortLev">-- 倍杠杆</div>
+          <div class="pos-pnl" id="shortPnl">浮盈亏 --</div>
+          <div class="pos-sub" id="shortSub">保证金 ¥0.00 · 入场参考 --</div>
+        </div>
+      </div>
+
+      <!-- 操作矩阵 -->
+      <div class="pos-actions">
+        <button class="act act-long" id="btnBuyLong" type="button">买多</button>
+        <button class="act act-sell" id="btnSellLong" type="button">卖多</button>
+        <button class="act act-short" id="btnBuyShort" type="button">买空</button>
+        <button class="act act-sell" id="btnSellShort" type="button">卖空</button>
+      </div>
+
+      <div class="panel-note" id="accountNote">
+        <span>净值</span><b id="netWorth">¥0.00</b>
+      </div>
+    </aside>
+  </main>
+</div>
+
+<!-- ======================= 弹层容器 ======================= -->
+
+<!-- 交易弹窗：金额 + 杠杆 -->
+<div class="modal-mask" id="modalTrade" hidden>
+  <div class="modal trade-modal">
+    <div class="modal-head">
+      <h3 id="tradeTitle">买多</h3>
+      <button class="modal-close" data-close="modalTrade" type="button">×</button>
+    </div>
+    <div class="trade-price-line">
+      当前收盘价 <b id="tradePrice">--</b> 美元/桶
+    </div>
+    <div class="field">
+      <label id="tradeAmountLabel">买入金额（元）</label>
+      <input id="tradeAmount" type="number" min="1" step="100" placeholder="请输入金额">
+      <div class="quick-amt" id="quickAmt">
+        <button data-v="0.25" type="button">25%</button>
+        <button data-v="0.5" type="button">50%</button>
+        <button data-v="0.75" type="button">75%</button>
+        <button data-v="1" type="button">全部</button>
+      </div>
+    </div>
+    <div class="field" id="tradeLeverField">
+      <label>杠杆倍数 <span class="muted" id="tradeLeverTip"></span></label>
+      <div class="lever-chips" id="leverChips">
+        <button data-l="1" type="button">1倍</button>
+        <button data-l="2" type="button">2倍</button>
+        <button data-l="3" type="button">3倍</button>
+        <button data-l="5" type="button">5倍</button>
+        <button data-l="10" type="button">10倍</button>
+      </div>
+    </div>
+    <div class="trade-summary" id="tradeSummary"></div>
+    <button class="btn-confirm" id="btnTradeOk" type="button">确认下单</button>
+    <p class="risk-note" id="tradeRiskNote">杠杆放大收益与风险，浮亏超保证金将触发强制平仓。</p>
+  </div>
+</div>
+
+<!-- 低利贷弹窗 -->
+<div class="modal-mask" id="modalLoan" hidden>
+  <div class="modal loan-modal">
+    <div class="modal-head">
+      <h3>🏦 低利贷</h3>
+      <span class="loan-interest-tag">每日利息仅1%</span>
+      <button class="modal-close" data-close="modalLoan" type="button">×</button>
+    </div>
+    <div class="loan-stats">
+      <div class="loan-stat">
+        <span>可用额度</span>
+        <b id="loanAvailable">¥200,000.00</b>
+      </div>
+      <div class="loan-stat">
+        <span>应还金额</span>
+        <b class="loan-owed" id="loanOwed">¥0.00</b>
+      </div>
+    </div>
+    <div class="field">
+      <label>借贷金额（元）</label>
+      <input id="loanBorrowAmt" type="number" min="1" step="100" placeholder="最多可借 ¥200,000">
+      <button class="btn-line" id="btnLoanBorrow" type="button">立即借贷</button>
+    </div>
+    <div class="field">
+      <label>还款金额（元）</label>
+      <input id="loanRepayAmt" type="number" min="1" step="100" placeholder="请输入还款金额">
+      <button class="btn-line danger" id="btnLoanRepay" type="button">立即还款</button>
+      <button class="btn-line loan-repay-all" id="btnLoanRepayAll" type="button">一键还清</button>
+    </div>
+    <div class="loan-rules">
+      逾期不还？每天利息照样计，还可能去天台晒太阳…
+    </div>
+  </div>
+</div>
+
+<!-- 新闻弹窗 -->
+<div class="modal-mask" id="modalNews" hidden>
+  <div class="modal news-modal">
+    <div class="modal-head">
+      <h3>📰 原油国际大新闻</h3>
+      <span class="muted" id="newsCountLabel"></span>
+      <button class="modal-close" data-close="modalNews" type="button">×</button>
+    </div>
+    <div class="news-list" id="newsList"></div>
+  </div>
+</div>
+
+<!-- 轻提示 Toast -->
+<div class="toast-wrap" id="toastWrap"></div>
+
+<!-- 重大新闻弹窗 -->
+<div class="modal-mask newsflash-mask" id="modalNewsFlash" hidden>
+  <div class="newsflash">
+    <button class="modal-close newsflash-close" id="btnFlashClose" type="button" aria-label="关闭新闻">×</button>
+    <div class="flash-ico">📣</div>
+    <h3>有重要新闻！</h3>
+    <p id="flashText"></p>
+  </div>
+</div>
+
+<!-- 强平提示 -->
+<div class="modal-mask" id="modalLiquidation" hidden>
+  <div class="newsflash liq">
+    <div class="flash-ico">⚠️</div>
+    <h3>亏损过多，已经强制平仓</h3>
+    <p id="liqText"></p>
+    <button class="btn-confirm" id="btnLiqOk" type="button">知道了</button>
+  </div>
+</div>
+
+<!-- 游戏结束 -->
+<div class="modal-mask gameover-mask" id="modalGameOver" hidden>
+  <div class="gameover">
+    <div class="go-roof">🌇</div>
+    <h2 id="goTitle">你没有钱了，天台见！</h2>
+    <p id="goText"></p>
+    <button class="btn-restart" id="btnRestart" type="button">🔄 重新开始</button>
+  </div>
+</div>
+
+<script src="js/data.js"></script>
+<script src="js/game.js"></script>
+<script src="js/chart.js"></script>
+<script src="js/ui.js"></script>
+</body>
+</html>
