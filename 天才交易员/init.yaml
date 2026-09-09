@@ -1,0 +1,65 @@
+- generic [ref=e2]:
+  - banner [ref=e3]:
+    - button "贷 低利贷 每日利息仅1%" [ref=e4] [cursor=pointer]:
+      - generic [ref=e5]: 贷
+      - generic [ref=e6]:
+        - generic [ref=e7]: 低利贷
+        - emphasis [ref=e8]: 每日利息仅1%
+    - heading "成为下一个天才交易员吧！" [level=1] [ref=e9]
+    - generic [ref=e10]:
+      - button "◉ 新闻" [ref=e11] [cursor=pointer]:
+        - generic [ref=e12]: ◉
+        - text: 新闻
+      - button "▶ 下一天" [ref=e13] [cursor=pointer]:
+        - generic [ref=e14]: ▶
+        - text: 下一天
+  - main [ref=e15]:
+    - generic [ref=e16]:
+      - generic [ref=e17]:
+        - generic [ref=e18]: 2025年1月1日
+        - generic [ref=e19]:
+          - generic [ref=e20]: "73.01"
+          - generic [ref=e21]: 美元/桶
+          - generic [ref=e22]: +0.00 (+0.00%)
+      - generic [ref=e23]:
+        - generic:
+          - generic: 开 73.01
+          - generic: 高 73.15
+          - generic: 低 72.87
+          - generic: 收 73.01
+      - generic [ref=e25]:
+        - generic [ref=e26]:
+          - generic [ref=e27]: 存款余额
+          - generic [ref=e28]: ¥200,000.00
+        - generic [ref=e29]:
+          - button "买多" [ref=e30] [cursor=pointer]
+          - button "买空" [ref=e31] [cursor=pointer]
+      - generic [ref=e32]: 点击“下一天”推进行情 · 全部按当日收盘价结算
+    - complementary [ref=e33]:
+      - generic [ref=e34]: 我的持仓
+      - generic [ref=e35]:
+        - generic [ref=e36]:
+          - generic [ref=e37]: 买多 · 多单
+          - button "卖多" [ref=e38] [cursor=pointer]
+        - generic [ref=e39]:
+          - generic [ref=e40]: ¥0.00
+          - generic [ref=e41]: "-- 倍杠杆"
+          - generic [ref=e42]: 浮盈亏 --
+          - generic [ref=e43]: 保证金 ¥0.00 · 入场参考 --
+      - generic [ref=e44]:
+        - generic [ref=e45]:
+          - generic [ref=e46]: 买空 · 空单
+          - button "卖空" [ref=e47] [cursor=pointer]
+        - generic [ref=e48]:
+          - generic [ref=e49]: ¥0.00
+          - generic [ref=e50]: "-- 倍杠杆"
+          - generic [ref=e51]: 浮盈亏 --
+          - generic [ref=e52]: 保证金 ¥0.00 · 入场参考 --
+      - generic [ref=e53]:
+        - button "买多" [ref=e54] [cursor=pointer]
+        - button "卖多" [ref=e55] [cursor=pointer]
+        - button "买空" [ref=e56] [cursor=pointer]
+        - button "卖空" [ref=e57] [cursor=pointer]
+      - generic [ref=e58]:
+        - generic [ref=e59]: 净值
+        - generic [ref=e60]: ¥200,000.00
